@@ -1,0 +1,35 @@
+{% extends "catalog/base_generic.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+    <p>Ваши логин и пароль не совпали. Попробуйте ещё раз</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+        <p> Вы не имеете доступа к этой странице. Войдите в систему с другого аккаунта</p>
+    {% else %}
+        <p>Войдите в систему, чтобы увидеть эту страницу</p>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+    <input type="submit" value="Вход" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+<p><a href="{% url 'password_reset' %}"> Забыли пароль? </a></p>
+{% endblock %}
