@@ -27,6 +27,7 @@
                 <li><a href="{% url 'index' %}">Главная страница</a></li>
                 <li><a href="{% url 'books' %}">Все книги</a></li>
                 <li><a href="{% url 'authors' %}">Все авторы</a></li>
+                <li><a href="{% url 'authors_add' %}">Редактировать авторов</a></li>
             </ul>
             {% if user.is_authenticated %}
                 <p>Пользователь: {{ user.get_username }}</p>

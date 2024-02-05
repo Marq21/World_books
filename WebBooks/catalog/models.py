@@ -5,7 +5,14 @@ from django.db import models
 from django.urls import reverse
 
 
-class Genre(models.Model):
+class BaseModel(models.Model):
+    objects = models.Manager()
+
+    class Meta:
+        abstract = True
+
+
+class Genre(BaseModel):
     name = models.CharField(max_length=200,
                             help_text=" Введите жанр книги",
                             verbose_name="Жанр книги")
@@ -14,7 +21,7 @@ class Genre(models.Model):
         return self.name
 
 
-class Language(models.Model):
+class Language(BaseModel):
     name = models.CharField(max_length=20,
                             help_text="Введите язык книги",
                             verbose_name="Язык книги")
@@ -23,7 +30,7 @@ class Language(models.Model):
         return self.name
 
 
-class Author(models.Model):
+class Author(BaseModel):
     first_name = models.CharField(max_length=100,
                                   help_text="Введите имя автора",
                                   verbose_name="Имя автора")
@@ -41,7 +48,7 @@ class Author(models.Model):
         return self.last_name
 
 
-class Book(models.Model):
+class Book(BaseModel):
     title = models.CharField(max_length=200,
                              help_text="Введите название книги",
                              verbose_name="Название книги")
@@ -72,7 +79,7 @@ class Book(models.Model):
     display_author.short_description = 'Авторы'
 
 
-class Status(models.Model):
+class Status(BaseModel):
     name = models.CharField(max_length=20,
                             help_text="Введите статус экземпляра книги",
                             verbose_name="Статус экземпляра книги")
@@ -81,7 +88,7 @@ class Status(models.Model):
         return self.name
 
 
-class BookInstance(models.Model):
+class BookInstance(BaseModel):
     book = models.ForeignKey('Book', on_delete=models.CASCADE, null=True)
     inv_nom = models.CharField(max_length=20, null=True,
                                help_text="Введите инвентарный номер экземпляра",

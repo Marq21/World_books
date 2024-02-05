@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
 
+from .forms import AuthorsForm
 from .models import Book, Author, BookInstance
 
 
@@ -47,3 +49,43 @@ class LoanedBookByUserListView(LoginRequiredMixin, generic.ListView):
                 .filter(borrower=self.request.user)
                 .filter(status='2')
                 .order_by('due_back'))
+
+
+def authors_add(request):
+    authors = Author.objects.all()
+    authors_form = AuthorsForm()
+    return render(request, "catalog/authors_add.html",
+                  {"form": authors_form, "authors": authors})
+
+
+def create(request):
+    if request.method == "POST":
+        author = Author()
+        author.first_name = request.POST.get("first_name")
+        author.last_name = request.POST.get("last_name")
+        author.date_of_birth = request.POST.get("date_of_birth")
+        author.date_of_death = request.POST.get("date_of_death")
+        author.save()
+        return HttpResponseRedirect("/catalog/authors_add/")
+
+
+def delete(request, author_id):
+    try:
+        author = Author.objects.get(id=author_id)
+        author.delete()
+        return HttpResponseRedirect("/catalog/authors_add/")
+    except Author.DoesNotExist:
+        return HttpResponseRedirect("<h2>Автор не найден</h2>")
+
+
+def edit(request, author_id):
+    author = Author.objects.get(id=author_id)
+    if request.method == "POST":
+        author.first_name = request.POST.get("first_name")
+        author.last_name = request.POST.get("last_name")
+        author.date_of_birth = request.POST.get("date_of_birth")
+        author.date_of_death = request.POST.get("date_of_death")
+        author.save()
+        return HttpResponseRedirect("/catalog/authors_add/")
+    else:
+        return render(request, "catalog/edit.html", {"author": author})
