@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from .forms import AuthorsForm
 from .models import Book, Author, BookInstance
@@ -75,7 +77,7 @@ def delete(request, author_id):
         author.delete()
         return HttpResponseRedirect("/catalog/authors_add/")
     except Author.DoesNotExist:
-        return HttpResponseRedirect("<h2>Автор не найден</h2>")
+        return HttpResponseNotFound("<h2>Автор не найден</h2>")
 
 
 def edit(request, author_id):
@@ -89,3 +91,20 @@ def edit(request, author_id):
         return HttpResponseRedirect("/catalog/authors_add/")
     else:
         return render(request, "catalog/edit.html", {"author": author})
+
+
+class BookCreate(CreateView):
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+
+class BookUpdate(UpdateView):
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+
+class BookDelete(DeleteView):
+    model = Book
+    success_url = reverse_lazy('books')

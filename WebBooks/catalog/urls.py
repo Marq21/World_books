@@ -4,6 +4,12 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('book/create/', views.BookCreate.as_view(),
+         name='book_create'),
+    path('book/update/<int:pk>', views.BookUpdate.as_view(),
+         name='book_update'),
+    path('book/delete/<int:pk>', views.BookDelete.as_view(),
+         name='book_delete'),
     path('authors_add/', views.authors_add, name='authors_add'),
     path('edit/<int:author_id>/', views.edit, name='edit'),
     path('create/', views.create, name='create'),

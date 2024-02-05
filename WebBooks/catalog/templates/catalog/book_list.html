@@ -9,6 +9,8 @@
             <a href="{{ book.get_absolute_url }}">
                 {{ book.title }}</a>
                 ({{ book.genre }})
+            <a href="{% url 'book_update' book.id %}">Изменить</a>
+            <a href="{% url 'book_delete' book.id %}">Удалить</a>
         </li>
         {% endfor %}
     </ul>
